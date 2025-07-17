@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>bureau.io MVP</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Welcome to bureau.io!</h1>
+    <button class="button" id="getStartedBtn">Get Started</button>
+
+    <div id="authForm" style="display:none; margin-top: 30px;">
+        <h2>Sign Up / Log In</h2>
+        <input type="text" id="username" placeholder="Enter your username"><br><br>
+        <input type="password" id="password" placeholder="Enter your password"><br><br>
+        <button class="button" id="signUpBtn">Sign Up</button>
+        <button class="button" id="logInBtn">Log In</button>
+    </div>
+
+    <!-- Chat room (hidden at first) -->
+    <div id="chatRoom" style="display:none; margin-top: 30px;">
+        <h2>Chat Room</h2>
+        <div id="chatMessages" style="border:1px solid #ccc; background:#fff; width:800px; height:400px; margin:0 auto 10px auto; padding:10px; overflow-y:auto; text-align:left;"></div>
+        <input type="text" id="chatInput" placeholder="Type a message..." style="width:250px; padding:8px;">
+        <button class="button" id="sendBtn">Send</button>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        // Keep your existing code for showing/hiding forms and chat room
+
+        // Connect to the server
+        const socket = io();
+
+        // Store the username after login/signup
+        let currentUsername = "";
+
+        // When you sign up or log in, show the chat room and set the username
+        function showChatRoom(username) {
+            currentUsername = username;
+            document.getElementById('authForm').style.display = 'none';
+            document.getElementById('chatRoom').style.display = 'block';
+            document.getElementById('chatMessages').innerHTML = `<em>Welcome, <b>${username}</b>! Start chatting below.</em><br>`;
+        }
+
+        // When you send a message
+        document.getElementById('sendBtn').onclick = function() {
+            var input = document.getElementById('chatInput');
+            var message = input.value.trim();
+            if (message === "") return;
+
+            // Get the current time
+            var now = new Date();
+            var hours = now.getHours().toString().padStart(2, '0');
+            var minutes = now.getMinutes().toString().padStart(2, '0');
+            var timestamp = hours + ":" + minutes;
+
+            // Send the message (with username and timestamp) to the server
+            socket.emit('chat message', `<b>${currentUsername}:</b> ${message} <span style="color:#888; font-size:0.9em;">[${timestamp}]</span>`);
+
+            input.value = "";
+        };
+
+        // When a message is received from the server
+        socket.on('chat message', function(msg) {
+            var chatBox = document.getElementById('chatMessages');
+            chatBox.innerHTML += msg + "<br>";
+            chatBox.scrollTop = chatBox.scrollHeight;
+        });
+
+        // Allow pressing Enter to send message
+        document.getElementById('chatInput').addEventListener('keydown', function(e) {
+            if (e.key === "Enter") {
+                document.getElementById('sendBtn').click();
+            }
+        });
+
+        // Update your sign up and log in button handlers to use showChatRoom(username)
+        document.getElementById('signUpBtn').onclick = function() {
+            var username = document.getElementById('username').value;
+            if (username.trim() === "") {
+                alert("Please enter a username.");
+                return;
+            }
+            showChatRoom(username);
+        };
+
+        document.getElementById('logInBtn').onclick = function() {
+            var username = document.getElementById('username').value;
+            if (username.trim() === "") {
+                alert("Please enter a username.");
+                return;
+            }
+            showChatRoom(username);
+        };
+
+        // Show the form when "Get Started" is clicked
+        document.getElementById('getStartedBtn').onclick = function() {
+            document.getElementById('authForm').style.display = 'block';
+            this.style.display = 'none';
+        };
+    </script>
+</body>
+</html>
+    
