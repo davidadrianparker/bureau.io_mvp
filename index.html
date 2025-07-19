@@ -5,10 +5,14 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Welcome to bureau.io!</h1>
-    <button class="button" id="getStartedBtn">Get Started</button>
+    <!-- Welcome Screen -->
+    <div id="welcomeScreen" style="text-align: center; padding: 50px;">
+        <h1>Welcome to bureau.io!</h1>
+        <button class="button" id="getStartedBtn">Get Started</button>
+    </div>
 
-    <div id="authForm" style="display:none; margin-top: 30px;">
+    <!-- Auth Form -->
+    <div id="authForm" style="display:none; text-align: center; padding: 50px;">
         <h2>Sign Up / Log In</h2>
         <input type="text" id="username" placeholder="Enter your username"><br><br>
         <input type="password" id="password" placeholder="Enter your password"><br><br>
@@ -16,27 +20,60 @@
         <button class="button" id="logInBtn">Log In</button>
     </div>
 
-    <!-- Chat room (hidden at first) -->
-    <div id="chatRoom" style="display:none; margin-top: 30px;">
-        <h2>Chat Room</h2>
-        <div style="margin-bottom: 10px;">
-            <label for="roomSelect">Select Room: </label>
-            <select id="roomSelect" style="padding: 5px; margin-right: 10px;">
-                <option value="general"># General</option>
-                <option value="random"># Random</option>
-                <option value="help"># Help</option>
-                <option value="gaming"># Gaming</option>
-            </select>
-            <span id="currentRoom">Currently in: # General</span>
+    <!-- Main Chat Interface (hidden at first) -->
+    <div id="chatInterface" style="display:none; height: 100vh; display: flex;">
+        <!-- Sidebar -->
+        <div id="sidebar" style="width: 250px; background: #2f3136; color: white; padding: 20px;">
+            <h3 style="margin-top: 0; color: #dcddde;">bureau.io</h3>
+            
+            <!-- User Info -->
+            <div style="margin-bottom: 30px; padding: 10px; background: #40444b; border-radius: 5px;">
+                <div style="font-weight: bold; color: #dcddde;">👤 <span id="userDisplayName">User</span></div>
+                <div style="font-size: 12px; color: #72767d;">Online</div>
+            </div>
+            
+            <!-- Room List -->
+            <div style="margin-bottom: 20px;">
+                <h4 style="color: #72767d; font-size: 12px; text-transform: uppercase; margin-bottom: 10px;">Chat Rooms</h4>
+                <div id="roomList">
+                    <div class="room-item active" data-room="general"># General</div>
+                    <div class="room-item" data-room="random"># Random</div>
+                    <div class="room-item" data-room="help"># Help</div>
+                    <div class="room-item" data-room="gaming"># Gaming</div>
+                </div>
+            </div>
+            
+            <!-- Online Users -->
+            <div>
+                <h4 style="color: #72767d; font-size: 12px; text-transform: uppercase; margin-bottom: 10px;">Online Users</h4>
+                <div id="onlineUsers">
+                    <div style="color: #72767d; font-size: 12px;">No users online</div>
+                </div>
+            </div>
         </div>
-        <div id="chatMessages" style="border:1px solid #ccc; background:#fff; width:800px; height:400px; margin:0 auto 10px auto; padding:10px; overflow-y:auto; text-align:left;"></div>
-        <input type="text" id="chatInput" placeholder="Type a message..." style="width:250px; padding:8px;">
-        <button class="button" id="sendBtn">Send</button>
+        
+        <!-- Chat Area -->
+        <div id="chatArea" style="flex: 1; display: flex; flex-direction: column; background: #36393f;">
+            <!-- Chat Header -->
+            <div style="padding: 20px; border-bottom: 1px solid #40444b; background: #36393f;">
+                <h2 style="margin: 0; color: #dcddde;"># <span id="currentRoomName">General</span></h2>
+            </div>
+            
+            <!-- Messages -->
+            <div id="chatMessages" style="flex: 1; padding: 20px; overflow-y: auto; background: #36393f;"></div>
+            
+            <!-- Message Input -->
+            <div style="padding: 20px; background: #36393f; border-top: 1px solid #40444b;">
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="chatInput" placeholder="Type a message..." style="flex: 1; padding: 12px; border: none; border-radius: 5px; background: #40444b; color: #dcddde;">
+                    <button class="button" id="sendBtn">Send</button>
+                </div>
+            </div>
+        </div>
     </div>
+
     <script src="/socket.io/socket.io.js"></script>
     <script>
-        // Keep your existing code for showing/hiding forms and chat room
-
         // Connect to the server
         const socket = io();
 
@@ -47,8 +84,12 @@
         // When you sign up or log in, show the chat room and set the username
         function showChatRoom(username) {
             currentUsername = username;
+            document.getElementById('welcomeScreen').style.display = 'none';
             document.getElementById('authForm').style.display = 'none';
-            document.getElementById('chatRoom').style.display = 'block';
+            document.getElementById('chatInterface').style.display = 'flex';
+            
+            // Update user display name
+            document.getElementById('userDisplayName').textContent = username;
             
             // Join the default room
             joinRoom("general");
@@ -64,8 +105,14 @@
             socket.emit('join room', roomName);
             
             // Update UI
-            document.getElementById('currentRoom').textContent = `Currently in: # ${roomName.charAt(0).toUpperCase() + roomName.slice(1)}`;
-            document.getElementById('chatMessages').innerHTML = `<em>Joined <b># ${roomName}</b>. Start chatting!</em><br>`;
+            document.getElementById('currentRoomName').textContent = roomName.charAt(0).toUpperCase() + roomName.slice(1);
+            document.getElementById('chatMessages').innerHTML = `<em style="color: #72767d;">Joined <b># ${roomName}</b>. Start chatting!</em><br>`;
+            
+            // Update room selection
+            document.querySelectorAll('.room-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelector(`[data-room="${roomName}"]`).classList.add('active');
         }
 
         // When you send a message
@@ -82,7 +129,7 @@
 
             // Send the message to the current room
             socket.emit('chat message', {
-                message: `<b>${currentUsername}:</b> ${message} <span style="color:#888; font-size:0.9em;">[${timestamp}]</span>`,
+                message: `<b>${currentUsername}:</b> ${message} <span style="color:#72767d; font-size:0.9em;">[${timestamp}]</span>`,
                 room: currentRoom
             });
 
@@ -92,15 +139,17 @@
         // When a message is received from the server
         socket.on('chat message', function(data) {
             var chatBox = document.getElementById('chatMessages');
-            chatBox.innerHTML += data.message + "<br>";
+            chatBox.innerHTML += `<div style="margin-bottom: 10px; color: #dcddde;">${data.message}</div>`;
             chatBox.scrollTop = chatBox.scrollHeight;
         });
 
-        // Handle room changes
-        document.getElementById('roomSelect').onchange = function() {
-            var selectedRoom = this.value;
-            joinRoom(selectedRoom);
-        };
+        // Handle room clicks
+        document.querySelectorAll('.room-item').forEach(item => {
+            item.addEventListener('click', function() {
+                var selectedRoom = this.getAttribute('data-room');
+                joinRoom(selectedRoom);
+            });
+        });
 
         // Allow pressing Enter to send message
         document.getElementById('chatInput').addEventListener('keydown', function(e) {
@@ -130,8 +179,8 @@
 
         // Show the form when "Get Started" is clicked
         document.getElementById('getStartedBtn').onclick = function() {
+            document.getElementById('welcomeScreen').style.display = 'none';
             document.getElementById('authForm').style.display = 'block';
-            this.style.display = 'none';
         };
     </script>
 </body>

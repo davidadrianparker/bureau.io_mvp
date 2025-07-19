@@ -1,33 +1,121 @@
 body {
-    background-color: #f0f4f8;
-    font-family: Arial, sans-serif;
-    text-align: center;
-    padding-top: 80px;
-}
-
-h1 {
-    color: #22544A;
-    font-size: 2.5em;
-    margin-bottom: 0.5em;
-}
-
-p {
-    color: #333;
-    font-size: 1.2em;
-    margin-bottom: 2em;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #36393f;
+    color: #dcddde;
 }
 
 .button {
-    background-color: #22544A;
-    color: #fff;
+    background: #5865f2;
+    color: white;
     border: none;
-    padding: 15px 32px;
-    font-size: 1.1em;
-    border-radius: 8px;
+    padding: 12px 24px;
+    border-radius: 5px;
     cursor: pointer;
-    margin: 10px;
+    font-size: 14px;
+    font-weight: 500;
     transition: background 0.2s;
 }
+
 .button:hover {
-    background-color: #183c35;
+    background: #4752c4;
+}
+
+input[type="text"], input[type="password"] {
+    padding: 12px;
+    border: 1px solid #40444b;
+    border-radius: 5px;
+    background: #40444b;
+    color: #dcddde;
+    font-size: 14px;
+    width: 250px;
+}
+
+input[type="text"]:focus, input[type="password"]:focus {
+    outline: none;
+    border-color: #5865f2;
+}
+
+/* Room items styling */
+.room-item {
+    padding: 8px 12px;
+    margin: 2px 0;
+    border-radius: 4px;
+    cursor: pointer;
+    color: #72767d;
+    transition: all 0.2s;
+    font-size: 14px;
+}
+
+.room-item:hover {
+    background: #40444b;
+    color: #dcddde;
+}
+
+.room-item.active {
+    background: #40444b;
+    color: #dcddde;
+    font-weight: 500;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #2f3136;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #202225;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #40444b;
+}
+
+/* Welcome screen styling */
+#welcomeScreen h1 {
+    color: #dcddde;
+    font-size: 2.5em;
+    margin-bottom: 30px;
+}
+
+/* Auth form styling */
+#authForm h2 {
+    color: #dcddde;
+    margin-bottom: 30px;
+}
+
+/* Chat messages styling */
+#chatMessages {
+    color: #dcddde;
+    line-height: 1.4;
+}
+
+#chatMessages b {
+    color: #ffffff;
+}
+
+/* Sidebar styling */
+#sidebar {
+    border-right: 1px solid #202225;
+}
+
+#sidebar h3 {
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+/* User info styling */
+#userDisplayName {
+    color: #dcddde;
+}
+
+/* Online users styling */
+#onlineUsers {
+    font-size: 14px;
 }
