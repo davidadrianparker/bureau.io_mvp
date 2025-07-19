@@ -19,6 +19,16 @@
     <!-- Chat room (hidden at first) -->
     <div id="chatRoom" style="display:none; margin-top: 30px;">
         <h2>Chat Room</h2>
+        <div style="margin-bottom: 10px;">
+            <label for="roomSelect">Select Room: </label>
+            <select id="roomSelect" style="padding: 5px; margin-right: 10px;">
+                <option value="general"># General</option>
+                <option value="random"># Random</option>
+                <option value="help"># Help</option>
+                <option value="gaming"># Gaming</option>
+            </select>
+            <span id="currentRoom">Currently in: # General</span>
+        </div>
         <div id="chatMessages" style="border:1px solid #ccc; background:#fff; width:800px; height:400px; margin:0 auto 10px auto; padding:10px; overflow-y:auto; text-align:left;"></div>
         <input type="text" id="chatInput" placeholder="Type a message..." style="width:250px; padding:8px;">
         <button class="button" id="sendBtn">Send</button>
@@ -30,15 +40,32 @@
         // Connect to the server
         const socket = io();
 
-        // Store the username after login/signup
+        // Store the username and current room
         let currentUsername = "";
+        let currentRoom = "general";
 
         // When you sign up or log in, show the chat room and set the username
         function showChatRoom(username) {
             currentUsername = username;
             document.getElementById('authForm').style.display = 'none';
             document.getElementById('chatRoom').style.display = 'block';
-            document.getElementById('chatMessages').innerHTML = `<em>Welcome, <b>${username}</b>! Start chatting below.</em><br>`;
+            
+            // Join the default room
+            joinRoom("general");
+        }
+
+        // Function to join a room
+        function joinRoom(roomName) {
+            // Leave current room
+            socket.emit('leave room', currentRoom);
+            
+            // Join new room
+            currentRoom = roomName;
+            socket.emit('join room', roomName);
+            
+            // Update UI
+            document.getElementById('currentRoom').textContent = `Currently in: # ${roomName.charAt(0).toUpperCase() + roomName.slice(1)}`;
+            document.getElementById('chatMessages').innerHTML = `<em>Joined <b># ${roomName}</b>. Start chatting!</em><br>`;
         }
 
         // When you send a message
@@ -53,18 +80,27 @@
             var minutes = now.getMinutes().toString().padStart(2, '0');
             var timestamp = hours + ":" + minutes;
 
-            // Send the message (with username and timestamp) to the server
-            socket.emit('chat message', `<b>${currentUsername}:</b> ${message} <span style="color:#888; font-size:0.9em;">[${timestamp}]</span>`);
+            // Send the message to the current room
+            socket.emit('chat message', {
+                message: `<b>${currentUsername}:</b> ${message} <span style="color:#888; font-size:0.9em;">[${timestamp}]</span>`,
+                room: currentRoom
+            });
 
             input.value = "";
         };
 
         // When a message is received from the server
-        socket.on('chat message', function(msg) {
+        socket.on('chat message', function(data) {
             var chatBox = document.getElementById('chatMessages');
-            chatBox.innerHTML += msg + "<br>";
+            chatBox.innerHTML += data.message + "<br>";
             chatBox.scrollTop = chatBox.scrollHeight;
         });
+
+        // Handle room changes
+        document.getElementById('roomSelect').onchange = function() {
+            var selectedRoom = this.value;
+            joinRoom(selectedRoom);
+        };
 
         // Allow pressing Enter to send message
         document.getElementById('chatInput').addEventListener('keydown', function(e) {
@@ -75,9 +111,9 @@
 
         // Update your sign up and log in button handlers to use showChatRoom(username)
         document.getElementById('signUpBtn').onclick = function() {
-            var username = document.getElementById('username').value;
-            if (username.trim() === "") {
-                alert("Please enter a username.");
+            var username = document.getElementById('username').value.trim();
+            if (username === "") {
+                alert("Please enter a username");
                 return;
             }
             showChatRoom(username);
