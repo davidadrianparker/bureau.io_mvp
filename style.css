@@ -7,7 +7,7 @@ body {
 }
 
 .button {
-    background: #5865f2;
+    background: #22544A;
     color: white;
     border: none;
     padding: 12px 24px;
@@ -19,7 +19,7 @@ body {
 }
 
 .button:hover {
-    background: #4752c4;
+    background: #183c35;
 }
 
 input[type="text"], input[type="password"] {
@@ -34,7 +34,7 @@ input[type="text"], input[type="password"] {
 
 input[type="text"]:focus, input[type="password"]:focus {
     outline: none;
-    border-color: #5865f2;
+    border-color: #22544A;
 }
 
 /* Room items styling */
@@ -54,9 +54,37 @@ input[type="text"]:focus, input[type="password"]:focus {
 }
 
 .room-item.active {
-    background: #40444b;
-    color: #dcddde;
+    background: #22544A;
+    color: #ffffff;
     font-weight: 500;
+}
+
+/* Settings Modal Styles */
+.settings-tab {
+    background: none;
+    border: none;
+    color: #72767d;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+}
+
+.settings-tab:hover {
+    color: #dcddde;
+}
+
+.settings-tab.active {
+    color: #22544A;
+    border-bottom-color: #22544A;
+}
+
+.settings-content {
+    display: none;
+}
+
+.settings-content.active {
+    display: block;
 }
 
 /* Scrollbar styling */
@@ -78,10 +106,44 @@ input[type="text"]:focus, input[type="password"]:focus {
 }
 
 /* Welcome screen styling */
+#welcomeScreen {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #36393f;
+    z-index: 10;
+    animation: fadeIn 1s;
+    text-align: center;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(40px);}
+    to   { opacity: 1; transform: translateY(0);}
+}
+
 #welcomeScreen h1 {
-    color: #dcddde;
-    font-size: 2.5em;
-    margin-bottom: 30px;
+    font-size: 2.8rem;
+    color: #fff;
+    margin-bottom: 32px;
+    letter-spacing: 1px;
+    animation: popIn 0.8s;
+    max-width: 90vw;
+}
+
+@keyframes popIn {
+    0%   { opacity: 0; transform: scale(0.95);}
+    80%  { opacity: 1; transform: scale(1.05);}
+    100% { opacity: 1; transform: scale(1);}
+}
+
+#welcomeScreen .button {
+    font-size: 1.2rem;
+    padding: 16px 40px;
+    margin-top: 12px;
+    animation: fadeIn 1.2s;
 }
 
 /* Auth form styling */
@@ -100,14 +162,27 @@ input[type="text"]:focus, input[type="password"]:focus {
     color: #ffffff;
 }
 
+.chat-message {
+    transition: background 0.2s;
+    border-radius: 5px;
+    padding: 4px 8px;
+}
+
+.chat-message:hover {
+    background: #40444b;
+    cursor: pointer;
+}
+
 /* Sidebar styling */
 #sidebar {
     border-right: 1px solid #202225;
+    position: relative;
 }
 
 #sidebar h3 {
     font-size: 18px;
     margin-bottom: 20px;
+    color: #22544A;
 }
 
 /* User info styling */
@@ -118,4 +193,113 @@ input[type="text"]:focus, input[type="password"]:focus {
 /* Online users styling */
 #onlineUsers {
     font-size: 14px;
+}
+
+/* Logout button hover effect */
+#logoutBtn:hover {
+    background: #c82333 !important;
+}
+
+.welcome-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.welcome-content h1 {
+    max-width: 90vw;
+    word-break: break-word;
+}
+
+#server-list .active-server {
+    background: #22544A;
+    color: #fff;
+    border-radius: 6px;
+    font-weight: bold;
+    padding: 8px 12px;
+    margin-bottom: 4px;
+    box-shadow: 0 2px 8px rgba(34,84,74,0.08);
+    transition: background 0.2s, color 0.2s;
+}
+#server-list li {
+    transition: background 0.2s, color 0.2s;
+}
+#server-list li:hover {
+    background: #183c35;
+    color: #fff;
+}
+
+#userInfoBox {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background: #40444b;
+    border-radius: 0 0 10px 0;
+    padding: 20px 20px 24px 20px;
+    box-sizing: border-box;
+    z-index: 20;
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.08);
+}
+
+#chatArea {
+    position: relative;
+}
+
+#rightOnlineUsers {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 220px;
+    height: 100%;
+    background: #23272a;
+    border-left: 1px solid #40444b;
+    padding: 20px 10px;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+}
+
+#chatMessages {
+    flex: 1;
+    min-height: 0;
+    max-height: 60vh;         /* Adjust as needed */
+    overflow-y: auto;
+    background: #36393f;
+    padding: 20px;
+    margin-right: 220px;      /* If you have a right sidebar */
+    scrollbar-width: thin;    /* For Firefox */
+    scrollbar-color: #40444b #2f3136; /* For Firefox */
+    border-radius: 8px;
+}
+
+/* Chrome, Edge, Safari */
+#chatMessages::-webkit-scrollbar {
+    width: 8px;
+    background: transparent;
+}
+
+#chatMessages::-webkit-scrollbar-thumb {
+    background: #40444b;
+    border-radius: 8px;
+    min-height: 40px;
+    border: 2px solid #36393f; /* Creates a floating effect */
+}
+
+#chatMessages::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#roomPanelContextMenu {
+    font-size: 15px;
+    user-select: none;
+    transition: box-shadow 0.2s;
+}
+#roomPanelContextMenu div:hover {
+    background: #40444b;
+}
+
+#roomList {
+    min-height: 100px;
 }

@@ -1,55 +1,71 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>bureau.io MVP</title>
+    <title>bureau.io</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+
 </head>
 <body>
     <!-- Welcome Screen -->
-    <div id="welcomeScreen" style="text-align: center; padding: 50px;">
-        <h1>Welcome to bureau.io!</h1>
-        <button class="button" id="getStartedBtn">Get Started</button>
+    <div id="welcomeScreen">
+        <div class="welcome-content">
+            <h1>Welcome to bureau.io!</h1>
+            <button class="button" id="getStartedBtn">Get Started</button>
+        </div>
     </div>
 
     <!-- Auth Form -->
     <div id="authForm" style="display:none; text-align: center; padding: 50px;">
         <h2>Sign Up / Log In</h2>
-        <input type="text" id="username" placeholder="Enter your username"><br><br>
+        <input type="text" id="loginIdentifier" placeholder="Enter your username or email"><br><br>
         <input type="password" id="password" placeholder="Enter your password"><br><br>
         <button class="button" id="signUpBtn">Sign Up</button>
         <button class="button" id="logInBtn">Log In</button>
+        <div id="authMessage" style="margin-top: 10px; color: #ff6b6b;"></div>
+        <p style="margin-top: 15px; color: #72767d; font-size: 14px;">
+            <a href="#" onclick="showForgotPassword()" style="color: #22544A; text-decoration: none;">Forgot your password?</a>
+        </p>
     </div>
 
     <!-- Main Chat Interface (hidden at first) -->
     <div id="chatInterface" style="display:none; height: 100vh; display: flex;">
         <!-- Sidebar -->
         <div id="sidebar" style="width: 250px; background: #2f3136; color: white; padding: 20px;">
-            <h3 style="margin-top: 0; color: #dcddde;">bureau.io</h3>
+            <h3 style="margin-top: 0; margin-bottom: 20px; color: #ffffff; font-weight: bold; border-bottom: 2px solid #22544A; padding-bottom: 10px;">bureau.io</h3>
             
             <!-- User Info -->
-            <div style="margin-bottom: 30px; padding: 10px; background: #40444b; border-radius: 5px;">
-                <div style="font-weight: bold; color: #dcddde;">👤 <span id="userDisplayName">User</span></div>
+            <div id="userInfoBox" style="margin-bottom: 30px; padding: 10px; background: #40444b; border-radius: 5px;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <img id="sidebarAvatar" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMzIiIGN5PSIzMiIgcj0iMzIiIGZpbGw9IiMyMjU0NEEiLz4KPHN2ZyB4PSIyMCIgeT0iMjAiIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJ3aGl0ZSI+CjxwYXRoIGQ9Ik0xMiAxMmMyLjIxIDAgNC0xLjc5IDQtNHMtMS43OS00LTQtNC00IDEuNzktNCA0IDEuNzkgNCA0IDR6bTAgMmMtMi42NyAwLTggMS4zNC04IDR2MmgxNnYtMmMwLTIuNjYtNS4zMy00LTgtNHoiLz4KPC9zdmc+Cjwvc3ZnPgo=" style="width: 32px; height: 32px; border-radius: 50%; border: 2px solid #22544A; object-fit: cover;" alt="Avatar">
+                    <span id="userDisplayName">User</span>
+                </div>
                 <div style="font-size: 12px; color: #72767d;">Online</div>
+                <div style="margin-top: 10px; display: flex; gap: 5px;">
+                    <button id="settingsBtn" style="background: #22544A; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">⚙️ Settings</button>
+                    <button id="logoutBtn" style="background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">🚪 Logout</button>
+                </div>
             </div>
             
-            <!-- Room List -->
+            <!-- Your Servers -->
+            <div style="margin-bottom: 20px;">
+                <h4 style="color: #72767d; font-size: 12px; text-transform: uppercase; margin-bottom: 10px;">Your Servers
+                    <button id="addServerBtn" style="margin-left: 10px; background: #22544A; color: #fff; border: none; border-radius: 3px; padding: 2px 8px; font-size: 14px; cursor: pointer;">+</button>
+                </h4>
+                <ul id="server-list" style="list-style: none; padding: 0; margin: 0;"></ul>
+            </div>
+            
+            <!-- Chat Rooms -->
             <div style="margin-bottom: 20px;">
                 <h4 style="color: #72767d; font-size: 12px; text-transform: uppercase; margin-bottom: 10px;">Chat Rooms</h4>
                 <div id="roomList">
-                    <div class="room-item active" data-room="general"># General</div>
-                    <div class="room-item" data-room="random"># Random</div>
-                    <div class="room-item" data-room="help"># Help</div>
-                    <div class="room-item" data-room="gaming"># Gaming</div>
+                    <div class="room-item active" data-room="general"># general</div>
+                    <div class="room-item" data-room="random"># random</div>
+                    <div class="room-item" data-room="help"># help</div>
+                    <div class="room-item" data-room="gaming"># gaming</div>
                 </div>
             </div>
             
-            <!-- Online Users -->
-            <div>
-                <h4 style="color: #72767d; font-size: 12px; text-transform: uppercase; margin-bottom: 10px;">Online Users</h4>
-                <div id="onlineUsers">
-                    <div style="color: #72767d; font-size: 12px;">No users online</div>
-                </div>
-            </div>
         </div>
         
         <!-- Chat Area -->
@@ -60,7 +76,10 @@
             </div>
             
             <!-- Messages -->
-            <div id="chatMessages" style="flex: 1; padding: 20px; overflow-y: auto; background: #36393f;"></div>
+            <div id="chatMessages"></div>
+            
+            <!-- Typing Indicator -->
+            <div id="typingIndicator" style="display: none; background: #36393f; border-top: 1px solid #40444b;"></div>
             
             <!-- Message Input -->
             <div style="padding: 20px; background: #36393f; border-top: 1px solid #40444b;">
@@ -70,6 +89,234 @@
                 </div>
             </div>
         </div>
+
+        <!-- Online Users (right panel) -->
+        <div id="rightOnlineUsers" style="position: absolute; top: 0; right: 0; width: 220px; height: 100%; background: #23272a; border-left: 1px solid #40444b; padding: 20px 10px;">
+            <h4 style="color: #72767d; font-size: 12px; text-transform: uppercase; margin-bottom: 10px;">Online Users</h4>
+            <div id="onlineUsers">
+                <div style="color: #72767d; font-size: 12px;">No users online</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000;">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #2f3136; border-radius: 10px; padding: 20px; width: 500px; max-height: 80vh; overflow-y: auto;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #40444b; padding-bottom: 10px;">
+                <h2 style="margin: 0; color: #ffffff;">Settings</h2>
+                <button id="closeSettings" style="background: none; border: none; color: #72767d; font-size: 20px; cursor: pointer;">×</button>
+            </div>
+            
+            <!-- Settings Tabs -->
+            <div style="display: flex; border-bottom: 1px solid #40444b; margin-bottom: 20px;">
+                <button class="settings-tab active" data-tab="general">General</button>
+                <button class="settings-tab" data-tab="profile">Profile</button>
+                <button class="settings-tab" data-tab="servers">Servers</button>
+                <button class="settings-tab" data-tab="notifications">Notifications</button>
+                <button class="settings-tab" data-tab="appearance">Appearance</button>
+            </div>
+            
+            <!-- General Settings -->
+            <div id="general-tab" class="settings-content active">
+                <h3 style="color: #ffffff; margin-bottom: 15px;">General Settings</h3>
+                <div style="margin-bottom: 15px;">
+                    <label style="color: #dcddde; display: block; margin-bottom: 5px;">Username:</label>
+                    <input type="text" id="settingsUsername" style="width: 100%; padding: 8px; background: #40444b; border: 1px solid #72767d; border-radius: 4px; color: #dcddde;">
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label style="color: #dcddde; display: block; margin-bottom: 5px;">Status Message:</label>
+                    <input type="text" id="statusMessage" placeholder="What's on your mind?" style="width: 100%; padding: 8px; background: #40444b; border: 1px solid #72767d; border-radius: 4px; color: #dcddde;">
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label style="color: #dcddde; display: flex; align-items: center; cursor: pointer;">
+                        <input type="checkbox" id="autoScroll" checked style="margin-right: 8px;">
+                        Auto-scroll to new messages
+                    </label>
+                </div>
+                <button id="saveGeneral" style="background: #22544A; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">Save Changes</button>
+            </div>
+            
+            <!-- Profile Settings -->
+            <div id="profile-tab" class="settings-content">
+                <h3 style="color: #ffffff; margin-bottom: 15px;">Profile Settings</h3>
+                
+                <!-- Profile Picture Section -->
+                <div style="margin-bottom: 20px; text-align: center;">
+                    <div style="margin-bottom: 10px;">
+                        <img id="currentProfilePic" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMzIiIGN5PSIzMiIgcj0iMzIiIGZpbGw9IiMyMjU0NEEiLz4KPHN2ZyB4PSIyMCIgeT0iMjAiIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJ3aGl0ZSI+CjxwYXRoIGQ9Ik0xMiAxMmMyLjIxIDAgNC0xLjc5IDQtNHMtMS43OS00LTQtNC00IDEuNzktNCA0IDEuNzkgNCA0IDR6bTAgMmMtMi42NyAwLTggMS4zNC04IDR2MmgxNnYtMmMwLTIuNjYtNS4zMy00LTgtNHoiLz4KPC9zdmc+Cjwvc3ZnPgo=" alt="Profile Picture" style="width: 64px; height: 64px; border-radius: 50%; border: 2px solid #22544A; object-fit: cover;">
+                    </div>
+                    <input type="file" id="profilePicInput" accept="image/*" style="display: none;">
+                    <button id="changeProfilePicBtn" style="background: #22544A; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 12px;">📷 Change Picture</button>
+                </div>
+                
+                <div style="margin-bottom: 15px;">
+                    <label style="color: #dcddde; display: block; margin-bottom: 5px;">Username:</label>
+                    <input type="text" id="profileUsername" style="width: 100%; padding: 8px; background: #40444b; border: 1px solid #72767d; border-radius: 4px; color: #dcddde;">
+                </div>
+                
+                <div style="margin-bottom: 15px;">
+                    <label style="color: #dcddde; display: block; margin-bottom: 5px;">Bio:</label>
+                    <textarea id="profileBio" placeholder="Tell us about yourself..." style="width: 100%; padding: 8px; background: #40444b; border: 1px solid #72767d; border-radius: 4px; color: #dcddde; height: 80px; resize: vertical;"></textarea>
+                </div>
+                
+                <div style="margin-bottom: 15px;">
+                    <label style="color: #dcddde; display: block; margin-bottom: 5px;">Location:</label>
+                    <input type="text" id="profileLocation" placeholder="Where are you from?" style="width: 100%; padding: 8px; background: #40444b; border: 1px solid #72767d; border-radius: 4px; color: #dcddde;">
+                </div>
+                
+                <button id="saveProfile" style="background: #22544A; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">Save Profile</button>
+            </div>
+            
+            <!-- Server Settings -->
+            <div id="servers-tab" class="settings-content">
+                <h3 style="color: #ffffff; margin-bottom: 15px;">Server Management</h3>
+                
+                <!-- Create Server Section -->
+                <div style="margin-bottom: 30px; padding: 15px; background: #40444b; border-radius: 5px;">
+                    <h4 style="color: #ffffff; margin-bottom: 15px;">Create New Server</h4>
+                    <div style="margin-bottom: 15px;">
+                        <label style="color: #dcddde; display: block; margin-bottom: 5px;">Server Name:</label>
+                        <input type="text" id="serverName" placeholder="Enter server name" style="width: 100%; padding: 8px; background: #2f3136; border: 1px solid #72767d; border-radius: 4px; color: #dcddde;">
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <label style="color: #dcddde; display: block; margin-bottom: 5px;">Description (optional):</label>
+                        <textarea id="serverDescription" placeholder="What's this server about?" style="width: 100%; padding: 8px; background: #2f3136; border: 1px solid #72767d; border-radius: 4px; color: #dcddde; height: 60px; resize: vertical;"></textarea>
+                    </div>
+                    <button id="createServerBtn" style="background: #22544A; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">Create Server</button>
+                    <div id="serverMessage" style="margin-top: 10px; color: #ff6b6b;"></div>
+                </div>
+                
+                <!-- My Servers Section -->
+                <div>
+                    <h4 style="color: #ffffff; margin-bottom: 15px;">My Servers</h4>
+                    <div id="myServersList">
+                        <div style="color: #72767d; font-style: italic;">Loading servers...</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Notifications Settings -->
+            <div id="notifications-tab" class="settings-content">
+                <h3 style="color: #ffffff; margin-bottom: 15px;">Notification Settings</h3>
+                <div style="margin-bottom: 15px;">
+                    <label style="color: #dcddde; display: flex; align-items: center; cursor: pointer;">
+                        <input type="checkbox" id="soundNotifications" checked style="margin-right: 8px;">
+                        Sound notifications
+                    </label>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label style="color: #dcddde; display: flex; align-items: center; cursor: pointer;">
+                        <input type="checkbox" id="typingNotifications" checked style="margin-right: 8px;">
+                        Show typing indicators
+                    </label>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label style="color: #dcddde; display: flex; align-items: center; cursor: pointer;">
+                        <input type="checkbox" id="joinLeaveNotifications" checked style="margin-right: 8px;">
+                        Show join/leave notifications
+                    </label>
+                </div>
+                <button id="saveNotifications" style="background: #22544A; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">Save Changes</button>
+            </div>
+            
+            <!-- Appearance Settings -->
+            <div id="appearance-tab" class="settings-content">
+                <h3 style="color: #ffffff; margin-bottom: 15px;">Appearance Settings</h3>
+                <div style="margin-bottom: 15px;">
+                    <label style="color: #dcddde; display: block; margin-bottom: 5px;">Theme:</label>
+                    <select id="themeSelect" style="width: 100%; padding: 8px; background: #40444b; border: 1px solid #72767d; border-radius: 4px; color: #dcddde;">
+                        <option value="dark">Dark Theme</option>
+                        <option value="light">Light Theme</option>
+                    </select>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label style="color: #dcddde; display: block; margin-bottom: 5px;">Font Size:</label>
+                    <select id="fontSizeSelect" style="width: 100%; padding: 8px; background: #40444b; border: 1px solid #72767d; border-radius: 4px; color: #dcddde;">
+                        <option value="small">Small</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="large">Large</option>
+                    </select>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label style="color: #dcddde; display: flex; align-items: center; cursor: pointer;">
+                        <input type="checkbox" id="compactMode" style="margin-right: 8px;">
+                        Compact mode
+                    </label>
+                </div>
+                <button id="saveAppearance" style="background: #22544A; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Profile Modal -->
+    <div id="profileModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000;">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #2f3136; border-radius: 10px; padding: 20px; width: 400px; max-height: 80vh; overflow-y: auto;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #40444b; padding-bottom: 10px;">
+                <h2 style="margin: 0; color: #ffffff;">User Profile</h2>
+                <button id="closeProfile" style="background: none; border: none; color: #72767d; font-size: 20px; cursor: pointer;">×</button>
+            </div>
+            
+            <div id="profileContent">
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <div style="margin-bottom: 10px;">
+                        <img id="profileAvatar" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMzIiIGN5PSIzMiIgcj0iMzIiIGZpbGw9IiMyMjU0NEEiLz4KPHN2ZyB4PSIyMCIgeT0iMjAiIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJ3aGl0ZSI+CjxwYXRoIGQ9Ik0xMiAxMmMyLjIxIDAgNC0xLjc5IDQtNHMtMS43OS00LTQtNC00IDEuNzktNCA0IDEuNzkgNCA0IDR6bTAgMmMtMi42NyAwLTggMS4zNC04IDR2MmgxNnYtMmMwLTIuNjYtNS4zMy00LTgtNHoiLz4KPC9zdmc+Cjwvc3ZnPgo=" alt="Profile Picture" style="width: 80px; height: 80px; border-radius: 50%; border: 2px solid #22544A; object-fit: cover;">
+                    </div>
+                    <h3 style="margin: 0; color: #ffffff;" id="profileUsername">Username</h3>
+                    <p style="margin: 5px 0; color: #72767d; font-style: italic;" id="profileStatus">Status message</p>
+                </div>
+                
+                <div style="margin-bottom: 15px;">
+                    <label style="color: #dcddde; display: block; margin-bottom: 5px;">Bio:</label>
+                    <p style="color: #dcddde; margin: 0; padding: 10px; background: #40444b; border-radius: 4px;" id="profileBio">No bio yet</p>
+                </div>
+                
+                <div style="margin-bottom: 15px;">
+                    <label style="color: #dcddde; display: block; margin-bottom: 5px;">Location:</label>
+                    <p style="color: #dcddde; margin: 0; padding: 10px; background: #40444b; border-radius: 4px;" id="profileLocation">No location set</p>
+                </div>
+                
+                <div style="margin-bottom: 15px;">
+                    <label style="color: #dcddde; display: block; margin-bottom: 5px;">Member since:</label>
+                    <p style="color: #dcddde; margin: 0; padding: 10px; background: #40444b; border-radius: 4px;" id="profileCreated">Loading...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div id="forgotPasswordModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000;">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #2f3136; border-radius: 10px; padding: 20px; width: 400px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #40444b; padding-bottom: 10px;">
+                <h2 style="margin: 0; color: #ffffff;">Reset Password</h2>
+                <button id="closeForgotPassword" style="background: none; border: none; color: #72767d; font-size: 20px; cursor: pointer;">×</button>
+            </div>
+            
+            <div id="forgotPasswordStep1">
+                <p style="color: #dcddde; margin-bottom: 20px;">Enter your username to reset your password:</p>
+                <input type="text" id="resetUsername" placeholder="Enter your username" style="width: 100%; padding: 12px; background: #40444b; border: 1px solid #72767d; border-radius: 4px; color: #dcddde; margin-bottom: 15px;">
+                <button id="requestResetBtn" style="background: #22544A; color: white; border: none; padding: 12px 20px; border-radius: 4px; cursor: pointer; width: 100%;">Request Reset</button>
+                <div id="resetMessage" style="margin-top: 10px; color: #ff6b6b;"></div>
+            </div>
+            
+            <div id="forgotPasswordStep2" style="display: none;">
+                <p style="color: #dcddde; margin-bottom: 20px;">Enter your new password:</p>
+                <input type="password" id="newPassword" placeholder="New password" style="width: 100%; padding: 12px; background: #40444b; border: 1px solid #72767d; border-radius: 4px; color: #dcddde; margin-bottom: 10px;">
+                <input type="password" id="confirmPassword" placeholder="Confirm new password" style="width: 100%; padding: 12px; background: #40444b; border: 1px solid #72767d; border-radius: 4px; color: #dcddde; margin-bottom: 15px;">
+                <button id="resetPasswordBtn" style="background: #22544A; color: white; border: none; padding: 12px 20px; border-radius: 4px; cursor: pointer; width: 100%;">Reset Password</button>
+                <div id="resetStep2Message" style="margin-top: 10px; color: #ff6b6b;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Context Menu -->
+    <div id="messageContextMenu" style="display:none; position:absolute; z-index:10000; background:#23272a; color:#fff; border-radius:6px; box-shadow:0 2px 8px rgba(0,0,0,0.2); min-width:120px;">
+      <div id="replyOption" style="padding:10px; cursor:pointer; border-bottom:1px solid #40444b;">Reply</div>
+      <div id="deleteOption" style="padding:10px; cursor:pointer;">Delete</div>
+    </div>
+
+    <!-- Chat Room Panel Context Menu -->
+    <div id="roomPanelContextMenu" style="display:none; position:absolute; z-index:10000; background:#23272a; color:#fff; border-radius:6px; box-shadow:0 2px 8px rgba(0,0,0,0.2); min-width:160px;">
+      <div id="addRoomOption" style="padding:10px; cursor:pointer;">➕ Create New Chat Room</div>
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
@@ -77,9 +324,18 @@
         // Connect to the server
         const socket = io();
 
+        socket.on('connect', () => {
+          console.log('Socket.io connected!');
+        });
+
+        socket.onAny((event, ...args) => {
+          console.log('Socket.io event received:', event, args);
+        });
+
         // Store the username and current room
         let currentUsername = "";
         let currentRoom = "general";
+        let currentServer = null;
 
         // When you sign up or log in, show the chat room and set the username
         function showChatRoom(username) {
@@ -87,32 +343,42 @@
             document.getElementById('welcomeScreen').style.display = 'none';
             document.getElementById('authForm').style.display = 'none';
             document.getElementById('chatInterface').style.display = 'flex';
-            
-            // Update user display name
             document.getElementById('userDisplayName').textContent = username;
-            
-            // Join the default room
-            joinRoom("general");
+            // Set sidebar avatar
+            const sidebarAvatar = document.getElementById('sidebarAvatar');
+            if (currentUserProfile && currentUserProfile.profile && currentUserProfile.profile.picture) {
+              sidebarAvatar.src = currentUserProfile.profile.picture;
+            } else {
+              // Default avatar
+              sidebarAvatar.src = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMzIiIGN5PSIzMiIgcj0iMzIiIGZpbGw9IiMyMjU0NEEiLz4KPHN2ZyB4PSIyMCIgeT0iMjAiIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJ3aGl0ZSI+CjxwYXRoIGQ9Ik0xMiAxMmMyLjIxIDAgNC0xLjc5IDQtNHMtMS43OS00LTQtNC00IDEuNzktNCA0IDEuNzkgNCA0IDR6bTAgMmMtMi42NyAwLTggMS4zNC04IDR2MmgxNnYtMmMwLTIuNjYtNS4zMy00LTgtNHoiLz4KPC9zdmc+Cjwvc3ZnPgo=";
+            }
+            // Removed: joinRoom("general");
+            updateSidebarServers(); // This will let the user pick a server
         }
 
         // Function to join a room
         function joinRoom(roomName) {
-            // Leave current room
-            socket.emit('leave room', currentRoom);
-            
-            // Join new room
-            currentRoom = roomName;
-            socket.emit('join room', roomName);
+            if (!currentServer) {
+                alert('Please select a server first!');
+                return;
+            }
+            currentRoom = roomName; // Track the current room
+            socket.emit('join room', {
+                serverId: currentServer.id,
+                roomName: roomName,
+                username: currentUsername
+            });
             
             // Update UI
             document.getElementById('currentRoomName').textContent = roomName.charAt(0).toUpperCase() + roomName.slice(1);
-            document.getElementById('chatMessages').innerHTML = `<em style="color: #72767d;">Joined <b># ${roomName}</b>. Start chatting!</em><br>`;
+            document.getElementById('chatMessages').innerHTML = `<em style="color: #72767d;">No messages yet in <b># ${roomName}</b>. Start chatting!</em><br>`;
             
             // Update room selection
             document.querySelectorAll('.room-item').forEach(item => {
                 item.classList.remove('active');
             });
-            document.querySelector(`[data-room="${roomName}"]`).classList.add('active');
+            const activeRoom = Array.from(document.querySelectorAll('.room-item')).find(item => item.getAttribute('data-room') === roomName);
+            if (activeRoom) activeRoom.classList.add('active');
         }
 
         // When you send a message
@@ -121,16 +387,16 @@
             var message = input.value.trim();
             if (message === "") return;
 
-            // Get the current time
-            var now = new Date();
-            var hours = now.getHours().toString().padStart(2, '0');
-            var minutes = now.getMinutes().toString().padStart(2, '0');
-            var timestamp = hours + ":" + minutes;
+            // Get the current timestamp
+            var timestamp = new Date().toISOString();
 
             // Send the message to the current room
             socket.emit('chat message', {
-                message: `<b>${currentUsername}:</b> ${message} <span style="color:#72767d; font-size:0.9em;">[${timestamp}]</span>`,
-                room: currentRoom
+                message: `<b>${currentUsername}:</b> ${message}`,
+                timestamp: timestamp,
+                room: currentRoom,
+                serverId: currentServer.id,
+                username: currentUsername
             });
 
             input.value = "";
@@ -138,9 +404,239 @@
 
         // When a message is received from the server
         socket.on('chat message', function(data) {
+            console.log('Received chat message on client:', data); // <-- Add this line
             var chatBox = document.getElementById('chatMessages');
-            chatBox.innerHTML += `<div style="margin-bottom: 10px; color: #dcddde;">${data.message}</div>`;
+            var timestamp = data.timestamp ? formatTimestamp(data.timestamp) : 'just now';
+            // Generate a unique message ID (could be timestamp+username or a real ID from backend)
+            var msgId = data.timestamp + '-' + (data.username || '');
+            var msgDiv = document.createElement('div');
+            msgDiv.className = 'chat-message'; // <-- Add this line!
+            msgDiv.style.marginBottom = '10px';
+            msgDiv.style.color = '#dcddde';
+            msgDiv.setAttribute('data-msg-id', data.id); // Use the real ID from backend!
+            msgDiv.innerHTML = `${data.message} <span style="color:#72767d; font-size:0.9em;">[${timestamp}]</span>`;
+
+            // Right-click handler
+            msgDiv.oncontextmenu = function(e) {
+                e.preventDefault();
+                showMessageContextMenu(e, data.id, msgDiv);
+            };
+
+            chatBox.appendChild(msgDiv);
             chatBox.scrollTop = chatBox.scrollHeight;
+        });
+
+        // When message history is received
+        socket.on('message history', function(data) {
+            console.log('Received message history:', data);
+            var chatBox = document.getElementById('chatMessages');
+            
+            // Clear current messages
+            chatBox.innerHTML = '';
+            
+            // Add all historical messages
+            data.messages.forEach(function(msg) {
+                var timestamp = msg.timestamp ? formatTimestamp(msg.timestamp) : 'just now';
+                var msgDiv = document.createElement('div');
+                msgDiv.className = 'chat-message';
+                msgDiv.style.marginBottom = '10px';
+                msgDiv.style.color = '#dcddde';
+                msgDiv.setAttribute('data-msg-id', msg.id);
+                msgDiv.innerHTML = `${msg.message} <span style="color:#72767d; font-size:0.9em;">[${timestamp}]</span>`;
+
+                // Right-click handler
+                msgDiv.oncontextmenu = function(e) {
+                    e.preventDefault();
+                    showMessageContextMenu(e, msg.id, msgDiv);
+                };
+
+                chatBox.appendChild(msgDiv);
+            });
+            
+            // Scroll to bottom
+            chatBox.scrollTop = chatBox.scrollHeight;
+        });
+
+        // When a user joins the room
+        socket.on('user joined', function(data) {
+            var chatBox = document.getElementById('chatMessages');
+            chatBox.innerHTML += `<div style="margin-bottom: 10px; color: #72767d; font-style: italic;">👋 <b>${data.username}</b> joined the room</div>`;
+            chatBox.scrollTop = chatBox.scrollHeight;
+        });
+
+        // When a user leaves the room
+        socket.on('user left', function(data) {
+            var chatBox = document.getElementById('chatMessages');
+            chatBox.innerHTML += `<div style="margin-bottom: 10px; color: #72767d; font-style: italic;">👋 <b>${data.username}</b> left the room</div>`;
+            chatBox.scrollTop = chatBox.scrollHeight;
+        });
+
+        // When the user list updates
+        socket.on('user list update', function(data) {
+            updateUserList(data.users);
+        });
+
+        // Function to update the user list
+        function updateUserList(users) {
+            var userList = document.getElementById('onlineUsers');
+            if (users.length === 0) {
+                userList.innerHTML = '<div style="color: #72767d; font-size: 12px;">No users online</div>';
+            } else {
+                userList.innerHTML = users.map(user => 
+                    `<div style="color: #dcddde; font-size: 12px; margin: 2px 0; cursor: pointer; padding: 2px 5px; border-radius: 3px; transition: background 0.2s;" 
+                         onmouseover="this.style.background='#40444b'" 
+                         onmouseout="this.style.background='transparent'"
+                         onclick="showUserProfile('${user}')">👤 ${user}</div>`
+                ).join('');
+            }
+        }
+
+        // Profile viewing functionality
+        let currentUserProfile = null;
+
+        async function showUserProfile(username) {
+            const result = await getUserProfile(username);
+            if (result.success) {
+                const user = result.user;
+                document.getElementById('profileUsername').textContent = user.username;
+                document.getElementById('profileStatus').textContent = user.profile.status || 'No status set';
+                document.getElementById('profileBio').textContent = user.profile.bio || 'No bio yet';
+                document.getElementById('profileLocation').textContent = user.profile.location || 'No location set';
+                
+                // Display profile picture if exists
+                const profileAvatar = document.getElementById('profileAvatar');
+                if (user.profile && user.profile.picture) {
+                    profileAvatar.src = user.profile.picture;
+                } else {
+                    // Default avatar
+                    profileAvatar.src = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMzIiIGN5PSIzMiIgcj0iMzIiIGZpbGw9IiMyMjU0NEEiLz4KPHN2ZyB4PSIyMCIgeT0iMjAiIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJ3aGl0ZSI+CjxwYXRoIGQ9Ik0xMiAxMmMyLjIxIDAgNC0xLjc5IDQtNHMtMS43OS00LTQtNC00IDEuNzktNCA0IDEuNzkgNCA0IDR6bTAgMmMtMi42NyAwLTggMS4zNC04IDR2MmgxNnYtMmMwLTIuNjYtNS4zMy00LTgtNHoiLz4KPC9zdmc+Cjwvc3ZnPgo=";
+                }
+                
+                // Format the creation date
+                const createdDate = new Date(user.createdAt);
+                document.getElementById('profileCreated').textContent = createdDate.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                
+                document.getElementById('profileModal').style.display = 'block';
+            } else {
+                alert('Could not load user profile');
+            }
+        }
+
+        document.getElementById('closeProfile').onclick = function() {
+            document.getElementById('profileModal').style.display = 'none';
+        };
+
+        // Close profile modal when clicking outside
+        document.getElementById('profileModal').onclick = function(e) {
+            if (e.target === this) {
+                this.style.display = 'none';
+            }
+        };
+
+        // Typing indicators
+        let typingUsers = new Set();
+        let typingTimeout;
+
+        // When someone starts typing
+        socket.on('typing start', function(data) {
+            typingUsers.add(data.username);
+            updateTypingIndicator();
+        });
+
+        // When someone stops typing
+        socket.on('typing stop', function(data) {
+            typingUsers.delete(data.username);
+            updateTypingIndicator();
+        });
+
+        // Function to format timestamps
+        function formatTimestamp(timestamp) {
+            const now = new Date();
+            const messageTime = new Date(timestamp);
+            const diffInMinutes = Math.floor((now - messageTime) / (1000 * 60));
+            const diffInHours = Math.floor(diffInMinutes / 60);
+            const diffInDays = Math.floor(diffInHours / 24);
+            
+            // Same day - show time
+            if (diffInDays === 0) {
+                if (diffInMinutes < 1) {
+                    return 'just now';
+                } else if (diffInMinutes < 60) {
+                    return `${diffInMinutes} minute${diffInMinutes > 1 ? 's' : ''} ago`;
+                } else {
+                    return `${diffInHours} hour${diffInHours > 1 ? 's' : ''} ago`;
+                }
+            }
+            // Yesterday
+            else if (diffInDays === 1) {
+                return 'yesterday at ' + messageTime.toLocaleTimeString('en-US', { 
+                    hour: 'numeric', 
+                    minute: '2-digit',
+                    hour12: true 
+                });
+            }
+            // This week
+            else if (diffInDays < 7) {
+                return messageTime.toLocaleDateString('en-US', { 
+                    weekday: 'long' 
+                }) + ' at ' + messageTime.toLocaleTimeString('en-US', { 
+                    hour: 'numeric', 
+                    minute: '2-digit',
+                    hour12: true 
+                });
+            }
+            // Older
+            else {
+                return messageTime.toLocaleDateString('en-US', { 
+                    month: 'short', 
+                    day: 'numeric',
+                    year: 'numeric'
+                }) + ' at ' + messageTime.toLocaleTimeString('en-US', { 
+                    hour: 'numeric', 
+                    minute: '2-digit',
+                    hour12: true 
+                });
+            }
+        }
+
+        // Function to update typing indicator
+        function updateTypingIndicator() {
+            var typingDiv = document.getElementById('typingIndicator');
+            if (typingUsers.size > 0) {
+                var users = Array.from(typingUsers);
+                var text = users.length === 1 ? 
+                    `${users[0]} is typing...` : 
+                    `${users.slice(0, -1).join(', ')} and ${users[users.length - 1]} are typing...`;
+                typingDiv.innerHTML = `<div style="color: #72767d; font-style: italic; padding: 5px 20px;">✍️ ${text}</div>`;
+                typingDiv.style.display = 'block';
+            } else {
+                typingDiv.style.display = 'none';
+            }
+        }
+
+        // Handle typing in input field
+        let typingTimer;
+        document.getElementById('chatInput').addEventListener('input', function() {
+            // Clear existing timer
+            clearTimeout(typingTimer);
+            
+            // Send typing start
+            socket.emit('typing start', {
+                room: currentRoom,
+                username: currentUsername
+            });
+            
+            // Set timer to stop typing after 3 seconds
+            typingTimer = setTimeout(function() {
+                socket.emit('typing stop', {
+                    room: currentRoom,
+                    username: currentUsername
+                });
+            }, 3000);
         });
 
         // Handle room clicks
@@ -158,23 +654,87 @@
             }
         });
 
-        // Update your sign up and log in button handlers to use showChatRoom(username)
-        document.getElementById('signUpBtn').onclick = function() {
-            var username = document.getElementById('username').value.trim();
-            if (username === "") {
-                alert("Please enter a username");
+        // Real authentication functions
+        async function registerUser(username, password, email) {
+            try {
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password, email })
+                });
+                return await response.json();
+            } catch (error) {
+                return { success: false, message: 'Network error' };
+            }
+        }
+
+        async function loginUser(username, password) {
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                return await response.json();
+            } catch (error) {
+                return { success: false, message: 'Network error' };
+            }
+        }
+
+        async function getUserProfile(username) {
+            try {
+                const response = await fetch(`/api/user/${username}`);
+                return await response.json();
+            } catch (error) {
+                return { success: false, message: 'Network error' };
+            }
+        }
+
+        // Update your sign up and log in button handlers
+        document.getElementById('signUpBtn').onclick = async function() {
+            const loginIdentifier = document.getElementById('loginIdentifier').value.trim();
+            const password = document.getElementById('password').value;
+            
+            if (!loginIdentifier || !password) {
+                document.getElementById('authMessage').textContent = 'Please enter username/email and password';
                 return;
             }
-            showChatRoom(username);
+            
+            // For signup, we'll use the loginIdentifier as username and assume it's a username
+            const username = loginIdentifier;
+            const email = loginIdentifier.includes('@') ? loginIdentifier : ''; // If it looks like email, use it
+            
+            const result = await registerUser(username, password, email);
+            if (result.success) {
+                document.getElementById('authMessage').textContent = 'Registration successful! Please log in.';
+                document.getElementById('authMessage').style.color = '#4CAF50';
+                // Clear the form after successful registration
+                document.getElementById('loginIdentifier').value = '';
+                document.getElementById('password').value = '';
+            } else {
+                document.getElementById('authMessage').textContent = result.message;
+                document.getElementById('authMessage').style.color = '#ff6b6b';
+            }
         };
 
-        document.getElementById('logInBtn').onclick = function() {
-            var username = document.getElementById('username').value;
-            if (username.trim() === "") {
-                alert("Please enter a username.");
+        document.getElementById('logInBtn').onclick = async function() {
+            const username = document.getElementById('loginIdentifier').value.trim();
+            const password = document.getElementById('password').value;
+            
+            if (!username || !password) {
+                document.getElementById('authMessage').textContent = 'Please enter username and password';
                 return;
             }
-            showChatRoom(username);
+            
+            const result = await loginUser(username, password);
+            if (result.success) {
+                currentUsername = result.user.username;
+                currentUserProfile = result.user.profile;
+                showChatRoom(result.user.username);
+            } else {
+                document.getElementById('authMessage').textContent = result.message;
+                document.getElementById('authMessage').style.color = '#ff6b6b';
+            }
         };
 
         // Show the form when "Get Started" is clicked
@@ -182,7 +742,611 @@
             document.getElementById('welcomeScreen').style.display = 'none';
             document.getElementById('authForm').style.display = 'block';
         };
+
+        // Settings functionality
+        document.getElementById('settingsBtn').onclick = function() {
+            document.getElementById('settingsModal').style.display = 'block';
+            // Load current settings
+            document.getElementById('settingsUsername').value = currentUsername;
+            
+            // Load current profile data
+            if (currentUserProfile) {
+                document.getElementById('profileUsername').value = currentUserProfile.username || '';
+                document.getElementById('profileBio').value = currentUserProfile.profile?.bio || '';
+                document.getElementById('profileLocation').value = currentUserProfile.profile?.location || '';
+                
+                // Load profile picture if exists
+                if (currentUserProfile.profile?.picture) {
+                    document.getElementById('currentProfilePic').src = currentUserProfile.profile.picture;
+                }
+            }
+            
+            // Load user's servers
+            loadUserServers();
+        };
+
+        // Profile picture upload functionality
+        document.getElementById('changeProfilePicBtn').onclick = function() {
+            document.getElementById('profilePicInput').click();
+        };
+
+        document.getElementById('profilePicInput').onchange = function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                // Validate file type
+                if (!file.type.startsWith('image/')) {
+                    alert('Please select an image file');
+                    return;
+                }
+                
+                // Validate file size (max 5MB)
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('Image must be smaller than 5MB');
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    // Create a canvas to resize the image
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    const img = new Image();
+                    
+                    img.onload = function() {
+                        // Set canvas size (64x64 for profile pic)
+                        canvas.width = 64;
+                        canvas.height = 64;
+                        
+                        // Draw and resize image
+                        ctx.drawImage(img, 0, 0, 64, 64);
+                        
+                        // Convert to base64
+                        const resizedImage = canvas.toDataURL('image/jpeg', 0.8);
+                        
+                        // Update the display
+                        document.getElementById('currentProfilePic').src = resizedImage;
+                        
+                        // Store the image data for saving
+                        window.tempProfilePicture = resizedImage;
+                    };
+                    
+                    img.src = e.target.result;
+                };
+                
+                reader.readAsDataURL(file);
+            }
+        };
+
+        // Save profile functionality
+        document.getElementById('saveProfile').onclick = async function() {
+            const username = document.getElementById('profileUsername').value.trim();
+            const bio = document.getElementById('profileBio').value.trim();
+            const location = document.getElementById('profileLocation').value.trim();
+            const picture = window.tempProfilePicture || (currentUserProfile?.profile?.picture || '');
+            
+            if (!username) {
+                alert('Username is required');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/update-profile', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: currentUsername,
+                        newUsername: username,
+                        bio: bio,
+                        location: location,
+                        picture: picture
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    // Update current user data
+                    currentUsername = username;
+                    currentUserProfile = result.user;
+                    
+                    // Update display
+                    document.getElementById('userDisplayName').textContent = username;
+                    
+                    // Clear temp picture
+                    window.tempProfilePicture = null;
+                    
+                    alert('Profile updated successfully!');
+                } else {
+                    alert(result.message || 'Failed to update profile');
+                }
+            } catch (error) {
+                console.error('Error updating profile:', error);
+                alert('Failed to update profile');
+            }
+        };
+
+        // Forgot password functionality
+        function showForgotPassword() {
+            document.getElementById('forgotPasswordModal').style.display = 'block';
+            document.getElementById('forgotPasswordStep1').style.display = 'block';
+            document.getElementById('forgotPasswordStep2').style.display = 'none';
+            document.getElementById('resetMessage').textContent = '';
+            document.getElementById('resetStep2Message').textContent = '';
+            document.getElementById('resetUsername').value = '';
+            document.getElementById('newPassword').value = '';
+            document.getElementById('confirmPassword').value = '';
+        }
+
+        document.getElementById('closeForgotPassword').onclick = function() {
+            document.getElementById('forgotPasswordModal').style.display = 'none';
+        };
+
+        // Close forgot password modal when clicking outside
+        document.getElementById('forgotPasswordModal').onclick = function(e) {
+            if (e.target === this) {
+                this.style.display = 'none';
+            }
+        };
+
+        // Request password reset
+        document.getElementById('requestResetBtn').onclick = async function() {
+            const username = document.getElementById('resetUsername').value.trim();
+            
+            if (!username) {
+                document.getElementById('resetMessage').textContent = 'Please enter your username';
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/request-password-reset', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    // Show step 2
+                    document.getElementById('forgotPasswordStep1').style.display = 'none';
+                    document.getElementById('forgotPasswordStep2').style.display = 'block';
+                    document.getElementById('resetStep2Message').textContent = '';
+                } else {
+                    document.getElementById('resetMessage').textContent = result.message || 'User not found';
+                }
+            } catch (error) {
+                console.error('Error requesting reset:', error);
+                document.getElementById('resetMessage').textContent = 'Failed to request reset';
+            }
+        };
+
+        // Reset password
+        document.getElementById('resetPasswordBtn').onclick = async function() {
+            const username = document.getElementById('resetUsername').value.trim();
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (!newPassword || !confirmPassword) {
+                document.getElementById('resetStep2Message').textContent = 'Please fill in all fields';
+                return;
+            }
+            
+            if (newPassword !== confirmPassword) {
+                document.getElementById('resetStep2Message').textContent = 'Passwords do not match';
+                return;
+            }
+            
+            if (newPassword.length < 6) {
+                document.getElementById('resetStep2Message').textContent = 'Password must be at least 6 characters';
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/reset-password', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ 
+                        username, 
+                        newPassword 
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    document.getElementById('resetStep2Message').textContent = 'Password reset successfully! You can now log in.';
+                    document.getElementById('resetStep2Message').style.color = '#4CAF50';
+                    
+                    // Close modal after 2 seconds
+                    setTimeout(() => {
+                        document.getElementById('forgotPasswordModal').style.display = 'none';
+                    }, 2000);
+                } else {
+                    document.getElementById('resetStep2Message').textContent = result.message || 'Failed to reset password';
+                }
+            } catch (error) {
+                console.error('Error resetting password:', error);
+                document.getElementById('resetStep2Message').textContent = 'Failed to reset password';
+            }
+        };
+
+        // Load user's servers
+        async function loadUserServers() {
+            if (!currentUsername) return;
+            
+            try {
+                const response = await fetch(`/api/servers/user/${currentUsername}`);
+                const result = await response.json();
+                
+                const serversList = document.getElementById('myServersList');
+                
+                if (result.success) {
+                    if (result.servers.length === 0) {
+                        serversList.innerHTML = '<div style="color: #72767d; font-style: italic;">No servers yet. Create your first server!</div>';
+                    } else {
+                        serversList.innerHTML = result.servers.map(server => `
+                            <div style="margin-bottom: 10px; padding: 10px; background: #2f3136; border-radius: 4px; border-left: 3px solid #22544A;">
+                                <div style="font-weight: bold; color: #ffffff;">${server.name}</div>
+                                <div style="color: #72767d; font-size: 12px; margin-bottom: 5px;">${server.description || 'No description'}</div>
+                                <div style="color: #72767d; font-size: 11px;">
+                                    👥 ${server.members.length} members • 
+                                    📅 Created ${new Date(server.createdAt).toLocaleDateString()}
+                                    ${server.owner === currentUsername ? ' • 👑 Owner' : ''}
+                                </div>
+                            </div>
+                        `).join('');
+                    }
+                } else {
+                    serversList.innerHTML = '<div style="color: #ff6b6b;">Failed to load servers</div>';
+                }
+            } catch (error) {
+                console.error('Error loading servers:', error);
+                document.getElementById('myServersList').innerHTML = '<div style="color: #ff6b6b;">Error loading servers</div>';
+            }
+        }
+
+        // Create server functionality
+        document.getElementById('createServerBtn').onclick = async function() {
+            const name = document.getElementById('serverName').value.trim();
+            const description = document.getElementById('serverDescription').value.trim();
+            
+            if (!name) {
+                document.getElementById('serverMessage').textContent = 'Please enter a server name';
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/servers', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: name,
+                        description: description,
+                        owner: currentUsername
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    document.getElementById('serverMessage').textContent = 'Server created successfully!';
+                    document.getElementById('serverMessage').style.color = '#4CAF50';
+                    
+                    // Clear form
+                    document.getElementById('serverName').value = '';
+                    document.getElementById('serverDescription').value = '';
+                    
+                    // Reload servers list
+                    loadUserServers();
+                    
+                    // Clear success message after 3 seconds
+                    setTimeout(() => {
+                        document.getElementById('serverMessage').textContent = '';
+                    }, 3000);
+                } else {
+                    document.getElementById('serverMessage').textContent = result.message || 'Failed to create server';
+                }
+            } catch (error) {
+                console.error('Error creating server:', error);
+                document.getElementById('serverMessage').textContent = 'Failed to create server';
+            }
+        };
+
+        // Logout functionality
+        document.getElementById('logoutBtn').onclick = function() {
+            if (confirm('Are you sure you want to logout?')) {
+                // Disconnect from socket
+                socket.disconnect();
+                
+                // Reset user data
+                currentUsername = "";
+                currentUserProfile = null;
+                
+                // Clear any stored data
+                localStorage.removeItem('currentUser');
+                
+                // Show welcome screen
+                document.getElementById('welcomeScreen').style.display = 'block';
+                document.getElementById('authForm').style.display = 'none';
+                document.getElementById('chatInterface').style.display = 'none';
+                
+                // Clear form fields
+                document.getElementById('loginIdentifier').value = '';
+                document.getElementById('password').value = '';
+                document.getElementById('authMessage').textContent = '';
+                
+                // Reset user display
+                document.getElementById('userDisplayName').textContent = 'User';
+                
+                console.log('User logged out successfully');
+            }
+        };
+
+        document.getElementById('closeSettings').onclick = function() {
+            document.getElementById('settingsModal').style.display = 'none';
+        };
+
+        // Close modal when clicking outside
+        document.getElementById('settingsModal').onclick = function(e) {
+            if (e.target === this) {
+                this.style.display = 'none';
+            }
+        };
+
+        // Settings tabs
+        document.querySelectorAll('.settings-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                // Remove active class from all tabs and content
+                document.querySelectorAll('.settings-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.settings-content').forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked tab
+                this.classList.add('active');
+                
+                // Show corresponding content
+                const tabName = this.getAttribute('data-tab');
+                document.getElementById(tabName + '-tab').classList.add('active');
+            });
+        });
+
+        // Save settings
+        document.getElementById('saveGeneral').onclick = function() {
+            const newUsername = document.getElementById('settingsUsername').value.trim();
+            if (newUsername && newUsername !== currentUsername) {
+                currentUsername = newUsername;
+                document.getElementById('userDisplayName').textContent = newUsername;
+                alert('Username updated!');
+            }
+            document.getElementById('settingsModal').style.display = 'none';
+        };
+
+        document.getElementById('saveNotifications').onclick = function() {
+            const soundEnabled = document.getElementById('soundNotifications').checked;
+            const typingEnabled = document.getElementById('typingNotifications').checked;
+            const joinLeaveEnabled = document.getElementById('joinLeaveNotifications').checked;
+            
+            // Store settings in localStorage
+            localStorage.setItem('soundNotifications', soundEnabled);
+            localStorage.setItem('typingNotifications', typingEnabled);
+            localStorage.setItem('joinLeaveNotifications', joinLeaveEnabled);
+            
+            alert('Notification settings saved!');
+            document.getElementById('settingsModal').style.display = 'none';
+        };
+
+        document.getElementById('saveAppearance').onclick = function() {
+            const theme = document.getElementById('themeSelect').value;
+            const fontSize = document.getElementById('fontSizeSelect').value;
+            const compactMode = document.getElementById('compactMode').checked;
+            
+            // Store settings in localStorage
+            localStorage.setItem('theme', theme);
+            localStorage.setItem('fontSize', fontSize);
+            localStorage.setItem('compactMode', compactMode);
+            
+            alert('Appearance settings saved!');
+            document.getElementById('settingsModal').style.display = 'none';
+        };
+
+        // Load saved settings on page load
+        window.addEventListener('load', function() {
+            // Load notification settings
+            const soundEnabled = localStorage.getItem('soundNotifications') !== 'false';
+            const typingEnabled = localStorage.getItem('typingNotifications') !== 'false';
+            const joinLeaveEnabled = localStorage.getItem('joinLeaveNotifications') !== 'false';
+            
+            document.getElementById('soundNotifications').checked = soundEnabled;
+            document.getElementById('typingNotifications').checked = typingEnabled;
+            document.getElementById('joinLeaveNotifications').checked = joinLeaveEnabled;
+            
+            // Load appearance settings
+            const theme = localStorage.getItem('theme') || 'dark';
+            const fontSize = localStorage.getItem('fontSize') || 'medium';
+            const compactMode = localStorage.getItem('compactMode') === 'true';
+            
+            document.getElementById('themeSelect').value = theme;
+            document.getElementById('fontSizeSelect').value = fontSize;
+            document.getElementById('compactMode').checked = compactMode;
+        });
+
+        window.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('welcomeScreen').style.display = 'block';
+            document.getElementById('authForm').style.display = 'none';
+            document.getElementById('chatInterface').style.display = 'none';
+        });
+
+          function updateSidebarServers() {
+    if (!currentUsername) {
+      document.getElementById('server-list').innerHTML = '';
+      return;
+    }
+    fetch(`/api/my-servers?username=${encodeURIComponent(currentUsername)}`)
+      .then(res => res.json())
+      .then(servers => {
+        const list = document.getElementById('server-list');
+        list.innerHTML = '';
+        servers.forEach(server => {
+            const li = document.createElement('li');
+            li.style.display = 'flex';
+            li.style.alignItems = 'center';
+            li.style.cursor = 'pointer';
+            li.style.padding = '6px 0';
+
+            // Create indicator
+            const indicator = document.createElement('span');
+            indicator.style.display = 'inline-block';
+            indicator.style.width = '8px';
+            indicator.style.height = '8px';
+            indicator.style.borderRadius = '50%';
+            indicator.style.marginRight = '10px';
+            indicator.style.background = (currentServer && currentServer.id === server.id) ? '#22544A' : 'transparent';
+
+            // Server name
+            const nameSpan = document.createElement('span');
+            nameSpan.textContent = server.name;
+
+            li.appendChild(indicator);
+            li.appendChild(nameSpan);
+
+            // Highlight the active server
+            if (currentServer && currentServer.id === server.id) {
+                li.className = 'active-server';
+            }
+
+            li.onclick = function() {
+                selectServer(server);
+                updateSidebarServers(); // Re-render to update highlight
+            };
+            list.appendChild(li);
+        });
+        // Auto-select the first server if available
+        if (servers.length > 0 && !currentServer) {
+            selectServer(servers[0]);
+        }
+      });
+  }
+
+  function selectServer(server) {
+    currentServer = server;
+    // Update the chat room list for this server
+    const roomListDiv = document.getElementById('roomList');
+    roomListDiv.innerHTML = '';
+    Object.values(server.channels).forEach(channel => {
+      const div = document.createElement('div');
+      div.className = 'room-item';
+      div.textContent = `# ${channel.name}`;
+      div.setAttribute('data-room', channel.name);
+      div.onclick = function() {
+        joinRoom(channel.name);
+      };
+      roomListDiv.appendChild(div);
+    });
+    // Optionally, join the first room by default
+    const firstChannel = Object.values(server.channels)[0];
+    if (firstChannel) {
+      joinRoom(firstChannel.name);
+    }
+  }
+
+  let contextMsgId = null;
+  let contextMsgDiv = null;
+
+  function showMessageContextMenu(e, msgId, msgDiv) {
+      contextMsgId = msgId;
+      contextMsgDiv = msgDiv;
+      const menu = document.getElementById('messageContextMenu');
+      menu.style.display = 'block';
+      menu.style.left = e.pageX + 'px';
+      menu.style.top = e.pageY + 'px';
+  }
+
+  // Hide menu on click elsewhere
+  document.addEventListener('click', function() {
+      document.getElementById('messageContextMenu').style.display = 'none';
+  });
+
+  // Reply option
+  document.getElementById('replyOption').onclick = function() {
+      if (contextMsgDiv) {
+          // Simple reply: insert quoted text into input
+          const text = contextMsgDiv.textContent.replace(/\[.*\]$/, '').trim();
+          document.getElementById('chatInput').value = `@reply: "${text}" `;
+          document.getElementById('chatInput').focus();
+      }
+      document.getElementById('messageContextMenu').style.display = 'none'; // Hide menu after action
+  };
+
+  // Delete option (REAL deletion for all users)
+  document.getElementById('deleteOption').onclick = function() {
+      if (contextMsgId && currentServer && currentRoom && confirm('Are you sure you want to delete this message?')) {
+          socket.emit('delete message', {
+              serverId: currentServer.id,
+              room: currentRoom,
+              messageId: contextMsgId
+          });
+      }
+      document.getElementById('messageContextMenu').style.display = 'none'; // Hide menu after action
+  };
+
+  // Listen for delete event from server
+  socket.on('delete message', function(data) {
+      const msgDiv = document.querySelector(`[data-msg-id='${data.messageId}']`);
+      if (msgDiv) msgDiv.remove();
+  });
+
+  // Right-click on the room list panel to show the context menu
+document.getElementById('roomList').oncontextmenu = function(e) {
+    // Only show menu if not right-clicking on a room-item
+    if (!e.target.classList.contains('room-item')) {
+        e.preventDefault();
+        const menu = document.getElementById('roomPanelContextMenu');
+        menu.style.display = 'block';
+        menu.style.left = e.pageX + 'px';
+        menu.style.top = e.pageY + 'px';
+    }
+};
+
+// Hide the context menu when clicking anywhere else
+document.addEventListener('click', function() {
+    document.getElementById('roomPanelContextMenu').style.display = 'none';
+});
+
+// Handle "Add Room" option
+document.getElementById('addRoomOption').onclick = function() {
+    document.getElementById('roomPanelContextMenu').style.display = 'none';
+    const roomName = prompt('Enter a name for the new chat room:');
+    if (roomName && currentServer) {
+        fetch(`/api/servers/${currentServer.id}/channels`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ roomName })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                // Fetch the updated server info from the backend before re-rendering
+                fetch(`/api/servers/${currentServer.id}`)
+                  .then(res => res.json())
+                  .then(result => {
+                    if (result.success) {
+                      selectServer(result.server); // Use the updated server object
+                    }
+                  });
+            } else {
+                alert(data.message || 'Failed to create room');
+            }
+        });
+    }
+};
     </script>
-</body>
-</html>
+    </body>
+    </html>
     

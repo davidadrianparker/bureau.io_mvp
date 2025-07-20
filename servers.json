@@ -1,0 +1,58 @@
+{
+  "server_1752915508601_kkqxmi7wz": {
+    "id": "server_1752915508601_kkqxmi7wz",
+    "name": "Dave's Server",
+    "description": "",
+    "owner": "Dave",
+    "createdAt": "2025-07-19T08:58:28.601Z",
+    "isPublic": false,
+    "inviteCode": "4CUVFVTW",
+    "members": [
+      "Dave"
+    ],
+    "channels": {
+      "general": {
+        "name": "general",
+        "type": "text"
+      },
+      "random": {
+        "name": "random",
+        "type": "text"
+      },
+      "bruh": {
+        "name": "bruh",
+        "type": "text"
+      }
+    },
+    "settings": {
+      "allowInvites": true,
+      "defaultRole": "member"
+    }
+  },
+  "server_1752918559610_e1ihup65s": {
+    "id": "server_1752918559610_e1ihup65s",
+    "name": "Test Server 2",
+    "description": "",
+    "owner": "Dave",
+    "createdAt": "2025-07-19T09:49:19.611Z",
+    "isPublic": false,
+    "inviteCode": "XZ8KM6XU",
+    "members": [
+      "Dave"
+    ],
+    "channels": {
+      "general": {
+        "name": "general",
+        "type": "text"
+      },
+      "random": {
+        "name": "random",
+        "type": "text"
+      }
+    },
+    "settings": {
+      "allowInvites": true,
+      "defaultRole": "member"
+    }
+  }
+}
