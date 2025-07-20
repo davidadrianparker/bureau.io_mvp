@@ -460,8 +460,9 @@ app.get('/api/test', (req, res) => {
     res.send('Test route works!');
 });
 
-http.listen(3000, () => {
-  console.log('Server running at http://localhost:3000');
+const PORT = process.env.PORT || 3000;
+http.listen(PORT, () => {
+  console.log(`Server running at http://localhost:${PORT}`);
 });
 
 app.get('/api/my-servers', (req, res) => {
